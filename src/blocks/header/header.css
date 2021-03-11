@@ -1,0 +1,30 @@
+.header {
+  min-height: 73px;
+  width: 100%;
+  border-bottom: solid 1px rgba(84, 84, 84, .7);
+  display: flex;
+  justify-content: space-between;
+}
+
+.header__navigation-zone {
+  font-family: Inter;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 18px;
+  line-height: 22px;
+  color: #FFFFFF;
+  padding-top: 18px;
+}
+
+.header__handler {
+  color: inherit;
+  text-decoration: none;
+  margin-left: 24px;
+  opacity: 1;
+  transition: opacity .4s linear;
+}
+
+.header__handler:hover {
+  cursor: pointer;
+  opacity: .6;
+}
