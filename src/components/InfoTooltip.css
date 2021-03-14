@@ -10,10 +10,10 @@
   z-index: 1;
 
   display: flex;
-  /*visibility: hidden;
+  visibility: hidden;
   opacity: 0;
   transition: visibility .5s, opacity .5s linear;
-  */
+
 }
 
 .info-tooltip__item {

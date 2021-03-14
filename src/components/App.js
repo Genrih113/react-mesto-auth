@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { Route, Switch, useHistory, Redirect } from 'react-router-dom';
 
 import './App.css';
 
@@ -15,6 +16,8 @@ import ConfirmPopup from './ConfirmPopup.js';
 import Register from './Register.js';
 import Login from './Login.js';
 import InfoTooltip from './InfoTooltip.js';
+import ProtectedRoute from './ProtectedRoute.js';
+import signApi from '../utils/signApi';
 
 
 function App() {
@@ -152,6 +155,56 @@ function App() {
     .finally(closeAllPopups())
   }
 
+  // const localStrg = localStorage.getItem('token');
+  // console.log(`localStrg is: ${localStrg}`);
+  // console.log(`localStrg is: ${Boolean(localStrg) === true}`);
+
+
+  // к 14му спринту
+
+  console.log('new iteration');
+
+  const [headerLink, setHeaderLink] = useState('');
+  function chooseHeaderLink(string) {
+    setHeaderLink(string);
+  }
+
+  const [loggedIn, setLoggedIn] = React.useState(false); //(Boolean(localStrg));
+  function logIn() {
+    setLoggedIn(true);
+  }
+
+  const [userId, setUserId] = React.useState('');
+  function memorizeUserId(id) {
+    setUserId(id);
+  }
+
+  const [userEmail, setUserEmail] = React.useState('');
+  function memorizeUserEmail(email) {
+    setUserEmail(email);
+  }
+
+  const history = useHistory();
+
+  React.useEffect(() => {
+    if (Boolean(localStorage.getItem('token'))) {
+      console.log(`localStorage in effect ${localStorage.getItem('token')}`);
+      signApi.checkToken(localStorage.getItem('token'))
+      .then((result) => {
+
+        console.log(result.data.email);
+
+        memorizeUserEmail(result.data.email);
+        memorizeUserId(result.data._id);
+        if (result.data.email) {
+          logIn();
+          history.push('/');
+        }
+      })
+      .catch(err => console.log(err))
+    }
+  }, [history]);
+
 
   return (
     <CurrentUserContext.Provider value = {currentUser}>
@@ -160,54 +213,61 @@ function App() {
 
           <Header />
 
-          <Register />
+          <Switch>
 
-          <Login />
+            <Route path="/signup" ><Register/></Route>
 
-          <Main
-            onEditProfile={handleEditProfileClick}
-            onAddPlace={handleAddPlaceClick}
-            onEditAvatar={handleEditAvatarClick}
-            onCardClick={handleCardClick}
-            cards={cards}
-            onCardLike={handleCardLike}
-            //onCardDelete={handleCardDelete}
-            onCardDelete={handleCardDeleteClick}
-          />
+            <Route path="/signin" ><Login logIn = {logIn} /></Route>
+
+            {console.log(`loggedIn before protected route is: ${loggedIn}`)}
+            <ProtectedRoute path="/"
+                component={Main}
+                onEditProfile={handleEditProfileClick}
+                onAddPlace={handleAddPlaceClick}
+                onEditAvatar={handleEditAvatarClick}
+                onCardClick={handleCardClick}
+                cards={cards}
+                onCardLike={handleCardLike}
+                //onCardDelete={handleCardDelete}
+                onCardDelete={handleCardDeleteClick}
+                loggedIn = {loggedIn}
+            />
+
+          </Switch>
+
+              <EditProfilePopup
+                isOpen={isEditProfilePopupOpen}
+                onClose={closeAllPopups}
+                onUpdateUser={handleUpdateUser}
+              />
+
+              <AddPlacePopup
+                isOpen={isAddPlacePopupOpen}
+                onClose={closeAllPopups}
+                onAddPlace={handleAddPlaceSubmit}
+              />
+
+              <EditAvatarPopup
+                isOpen={isEditAvatarPopupOpen}
+                onClose={closeAllPopups}
+                onUpdateAvatar={handleUpdateAvatar}
+              />
+
+              <ImagePopup
+                isOpen={isImagePopupOpen}
+                card={selectedCard}
+                onClose={closeAllPopups}
+              />
+
+              <ConfirmPopup
+                isOpen={isConfirmPopupOpen}
+                onClose={closeAllPopups}
+                onConfirm={() => handleCardDelete(selectedCard)}
+              />
+
+              <InfoTooltip />
 
           <Footer />
-
-          <EditProfilePopup
-            isOpen={isEditProfilePopupOpen}
-            onClose={closeAllPopups}
-            onUpdateUser={handleUpdateUser}
-          />
-
-          <AddPlacePopup
-            isOpen={isAddPlacePopupOpen}
-            onClose={closeAllPopups}
-            onAddPlace={handleAddPlaceSubmit}
-          />
-
-          <EditAvatarPopup
-            isOpen={isEditAvatarPopupOpen}
-            onClose={closeAllPopups}
-            onUpdateAvatar={handleUpdateAvatar}
-          />
-
-          <ImagePopup
-            isOpen={isImagePopupOpen}
-            card={selectedCard}
-            onClose={closeAllPopups}
-          />
-
-          <ConfirmPopup
-            isOpen={isConfirmPopupOpen}
-            onClose={closeAllPopups}
-            onConfirm={() => handleCardDelete(selectedCard)}
-          />
-
-          <InfoTooltip />
 
         </div>
 

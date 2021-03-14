@@ -15,6 +15,11 @@
   color: #FFFFFF;
   padding-top: 18px;
 }
+@media (max-width: 950px) {
+  .header__navigation-zone {
+    margin-right: 28px;
+  }
+}
 
 .header__handler {
   color: inherit;
