@@ -183,7 +183,6 @@ function App() {
 
   React.useEffect(() => {
     if (Boolean(localStorage.getItem('token'))) {
-      console.log(`localStorage in effect ${localStorage.getItem('token')}`);
       signApi.checkToken(localStorage.getItem('token'))
       .then((result) => {
         if (result.data.email) {
