@@ -1,13 +1,8 @@
 import React from 'react';
-import { useHistory } from 'react-router-dom';
-
 
 import SignFormBlock from './SignFormBlock.js';
-import signApi from '../utils/signApi.js';
 
-function Register(props) {
-
-  const history = useHistory();
+function Login(props) {
 
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
@@ -22,18 +17,12 @@ function Register(props) {
 
   function handleSubmit(e) {
     e.preventDefault();
-    signApi.signin(password, email)
-      .then((res) => {
-        localStorage.setItem('token', (res.token));//JSON.stringify(res.token));
-        props.memorizeUserEmail(email);
-        props.logIn();
-        history.push('/');
-      })
+    props.signIn(password, email)
   }
 
   React.useEffect(() => {
     props.chooseHeaderLink('Зарегистрироваться');
-  });
+  }, []);
 
   return (
     <SignFormBlock
@@ -50,4 +39,4 @@ function Register(props) {
   )
 }
 
-export default Register;
+export default Login;

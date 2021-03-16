@@ -9,33 +9,33 @@ function InfoTooltip(props) {
   const history = useHistory();
 
   function onClose() {
-    if (props.isRegistrationSuccessful) {
+    if (props.isSignSuccessful) {
       history.push('/signin');
     }
-    props.resetRegistrationStatus();
+    props.resetSignStatus();
   }
 
   return (
     <div className="info-tooltip">
       <div className="info-tooltip__item">
         {
-          props.isRegistrationSuccessful &&
+          props.isSignSuccessful &&
           <img className="info-tooltip__image" src={successImage} alt="Регистрация пройдена">
           </img>
         }
         {
-          props.isRegistrationFailed &&
+          props.isSignFailed &&
           <img className="info-tooltip__image" src={errorImage} alt="Регистрация не пройдена">
           </img>
         }
         {
-          props.isRegistrationSuccessful &&
+          props.isSignSuccessful &&
           <p className="info-tooltip__message">
             Вы успешно зарегистрировались!
           </p>
         }
         {
-          props.isRegistrationFailed &&
+          props.isSignFailed &&
           <p className="info-tooltip__message">
             Что-то пошло не так! Попробуйте ещё раз.
           </p>

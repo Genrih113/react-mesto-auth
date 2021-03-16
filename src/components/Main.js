@@ -8,7 +8,7 @@ function Main(props) {
 
   React.useEffect(() => {
     props.chooseHeaderLink('Выйти');
-  });
+  }, []);
 
   return (
 

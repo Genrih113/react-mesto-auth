@@ -15,9 +15,9 @@ import AddPlacePopup from './AddPlacePopup.js';
 import ConfirmPopup from './ConfirmPopup.js';
 import Register from './Register.js';
 import Login from './Login.js';
-
 import ProtectedRoute from './ProtectedRoute.js';
 import signApi from '../utils/signApi';
+import InfoTooltip from './InfoTooltip.js';
 
 
 function App() {
@@ -195,6 +195,56 @@ function App() {
     }
   }, [history]);
 
+  function signIn(password, email) {
+    signApi.signin(password, email)
+    .then((res) => {
+      localStorage.setItem('token', (res.token));//JSON.stringify(res.token));
+      memorizeUserEmail(email);
+      logIn();
+      history.push('/');
+    })
+    .catch((err) => {
+      switchIsSignFailedOnTrue();
+      switchIsTriedToSignOnTrue();
+    })
+  }
+
+
+  const [isSignSuccessful, setIsSignSuccessful] = React.useState(false);
+  const [isSignFailed, setIsSignFailed] = React.useState(false);
+  const [isTriedToSign, setIsTriedToSign] = React.useState(false);
+
+  function switchIsSignSuccessfulOnTrue() {
+    setIsSignSuccessful(true);
+  }
+
+  function switchIsSignFailedOnTrue() {
+    setIsSignFailed(true);
+  }
+
+  function switchIsTriedToSignOnTrue() {
+    setIsTriedToSign(true);
+  }
+
+  function resetSignStatus() {
+    setIsSignSuccessful(false);
+    setIsSignFailed(false);
+    setIsTriedToSign(false);
+  }
+
+  function signUp(password, email) {
+    signApi.signup(password, email)
+      .then((res) => {
+        switchIsSignSuccessfulOnTrue();
+        switchIsTriedToSignOnTrue();
+      })
+      .catch((err) => {
+        switchIsSignFailedOnTrue();
+        switchIsTriedToSignOnTrue();
+      })
+  }
+
+
 
   return (
     <CurrentUserContext.Provider value = {currentUser}>
@@ -213,14 +263,14 @@ function App() {
             <Route path="/signup" >
               <Register
                 chooseHeaderLink = {chooseHeaderLink}
+                signUp = {signUp}
               />
             </Route>
 
             <Route path="/signin" >
               <Login
-                logIn = {logIn}
                 chooseHeaderLink = {chooseHeaderLink}
-                memorizeUserEmail = {memorizeUserEmail}
+                signIn = {signIn}
               />
             </Route>
 
@@ -241,36 +291,44 @@ function App() {
 
           </Switch>
 
-              <EditProfilePopup
-                isOpen={isEditProfilePopupOpen}
-                onClose={closeAllPopups}
-                onUpdateUser={handleUpdateUser}
-              />
+          <EditProfilePopup
+            isOpen={isEditProfilePopupOpen}
+            onClose={closeAllPopups}
+            onUpdateUser={handleUpdateUser}
+          />
 
-              <AddPlacePopup
-                isOpen={isAddPlacePopupOpen}
-                onClose={closeAllPopups}
-                onAddPlace={handleAddPlaceSubmit}
-              />
+          <AddPlacePopup
+            isOpen={isAddPlacePopupOpen}
+            onClose={closeAllPopups}
+            onAddPlace={handleAddPlaceSubmit}
+          />
 
-              <EditAvatarPopup
-                isOpen={isEditAvatarPopupOpen}
-                onClose={closeAllPopups}
-                onUpdateAvatar={handleUpdateAvatar}
-              />
+          <EditAvatarPopup
+            isOpen={isEditAvatarPopupOpen}
+            onClose={closeAllPopups}
+            onUpdateAvatar={handleUpdateAvatar}
+          />
 
-              <ImagePopup
-                isOpen={isImagePopupOpen}
-                card={selectedCard}
-                onClose={closeAllPopups}
-              />
+          <ImagePopup
+            isOpen={isImagePopupOpen}
+            card={selectedCard}
+            onClose={closeAllPopups}
+          />
 
-              <ConfirmPopup
-                isOpen={isConfirmPopupOpen}
-                onClose={closeAllPopups}
-                onConfirm={() => handleCardDelete(selectedCard)}
-              />
+          <ConfirmPopup
+            isOpen={isConfirmPopupOpen}
+            onClose={closeAllPopups}
+            onConfirm={() => handleCardDelete(selectedCard)}
+          />
 
+          {
+            isTriedToSign &&
+            <InfoTooltip
+              isSignFailed = {isSignFailed}
+              isSignSuccessful = {isSignSuccessful}
+              resetSignStatus = {resetSignStatus}
+            />
+          }
 
 
           <Footer />
