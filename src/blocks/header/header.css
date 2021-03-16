@@ -5,31 +5,3 @@
   display: flex;
   justify-content: space-between;
 }
-
-.header__navigation-zone {
-  font-family: Inter;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 18px;
-  line-height: 22px;
-  color: #FFFFFF;
-  padding-top: 18px;
-}
-@media (max-width: 950px) {
-  .header__navigation-zone {
-    margin-right: 28px;
-  }
-}
-
-.header__handler {
-  color: inherit;
-  text-decoration: none;
-  margin-left: 24px;
-  opacity: 1;
-  transition: opacity .4s linear;
-}
-
-.header__handler:hover {
-  cursor: pointer;
-  opacity: .6;
-}

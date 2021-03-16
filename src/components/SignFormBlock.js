@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom';
+
 import './SignFormBlock.css';
 
 function SignFormBlock(props) {
@@ -24,7 +26,7 @@ function SignFormBlock(props) {
         {props.isSignUp &&
         <div className="sign-form__login-prompt">
           <span>Уже зарегистрированы? </span>
-          <a className="sign-form__link" href="#">Войти</a>
+          <Link className="sign-form__link" to="/signin">Войти</Link>
         </div>
         }
       </form>

@@ -24,12 +24,16 @@ function Register(props) {
     e.preventDefault();
     signApi.signin(password, email)
       .then((res) => {
-        localStorage.setItem('token', JSON.stringify(res.token));//JSON.stringify(res.token));
+        localStorage.setItem('token', (res.token));//JSON.stringify(res.token));
+        props.memorizeUserEmail(email);
         props.logIn();
         history.push('/');
       })
   }
 
+  React.useEffect(() => {
+    props.chooseHeaderLink('Зарегистрироваться');
+  });
 
   return (
     <SignFormBlock

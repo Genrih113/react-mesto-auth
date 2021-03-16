@@ -1,0 +1,12 @@
+.header__handler {
+  color: inherit;
+  text-decoration: none;
+  margin-left: 24px;
+  opacity: 1;
+  transition: opacity .4s linear;
+}
+
+.header__handler:hover {
+  cursor: pointer;
+  opacity: .6;
+}

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Route, Switch, useHistory, Redirect } from 'react-router-dom';
+import { Route, Switch, useHistory } from 'react-router-dom';
 
 import './App.css';
 
@@ -15,7 +15,7 @@ import AddPlacePopup from './AddPlacePopup.js';
 import ConfirmPopup from './ConfirmPopup.js';
 import Register from './Register.js';
 import Login from './Login.js';
-import InfoTooltip from './InfoTooltip.js';
+
 import ProtectedRoute from './ProtectedRoute.js';
 import signApi from '../utils/signApi';
 
@@ -155,28 +155,23 @@ function App() {
     .finally(closeAllPopups())
   }
 
-  // const localStrg = localStorage.getItem('token');
-  // console.log(`localStrg is: ${localStrg}`);
-  // console.log(`localStrg is: ${Boolean(localStrg) === true}`);
 
 
   // к 14му спринту
 
-  console.log('new iteration');
 
   const [headerLink, setHeaderLink] = useState('');
   function chooseHeaderLink(string) {
     setHeaderLink(string);
   }
 
-  const [loggedIn, setLoggedIn] = React.useState(false); //(Boolean(localStrg));
+  const [loggedIn, setLoggedIn] = React.useState(false);
   function logIn() {
     setLoggedIn(true);
   }
-
-  const [userId, setUserId] = React.useState('');
-  function memorizeUserId(id) {
-    setUserId(id);
+  function logOut() {
+    setLoggedIn(false);
+    localStorage.removeItem('token');
   }
 
   const [userEmail, setUserEmail] = React.useState('');
@@ -191,12 +186,8 @@ function App() {
       console.log(`localStorage in effect ${localStorage.getItem('token')}`);
       signApi.checkToken(localStorage.getItem('token'))
       .then((result) => {
-
-        console.log(result.data.email);
-
-        memorizeUserEmail(result.data.email);
-        memorizeUserId(result.data._id);
         if (result.data.email) {
+          memorizeUserEmail(result.data.email);
           logIn();
           history.push('/');
         }
@@ -211,15 +202,29 @@ function App() {
       <div className="body">
         <div className="page body__page">
 
-          <Header />
+          <Header
+            headerLink = {headerLink}
+            userEmail = {userEmail}
+            loggedIn = {loggedIn}
+            logOut = {logOut}
+          />
 
           <Switch>
 
-            <Route path="/signup" ><Register/></Route>
+            <Route path="/signup" >
+              <Register
+                chooseHeaderLink = {chooseHeaderLink}
+              />
+            </Route>
 
-            <Route path="/signin" ><Login logIn = {logIn} /></Route>
+            <Route path="/signin" >
+              <Login
+                logIn = {logIn}
+                chooseHeaderLink = {chooseHeaderLink}
+                memorizeUserEmail = {memorizeUserEmail}
+              />
+            </Route>
 
-            {console.log(`loggedIn before protected route is: ${loggedIn}`)}
             <ProtectedRoute path="/"
                 component={Main}
                 onEditProfile={handleEditProfileClick}
@@ -230,7 +235,9 @@ function App() {
                 onCardLike={handleCardLike}
                 //onCardDelete={handleCardDelete}
                 onCardDelete={handleCardDeleteClick}
+
                 loggedIn = {loggedIn}
+                chooseHeaderLink = {chooseHeaderLink}
             />
 
           </Switch>
@@ -265,7 +272,7 @@ function App() {
                 onConfirm={() => handleCardDelete(selectedCard)}
               />
 
-              <InfoTooltip />
+
 
           <Footer />
 

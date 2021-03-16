@@ -6,6 +6,10 @@ function Main(props) {
 
   const currentUser = React.useContext(CurrentUserContext);
 
+  React.useEffect(() => {
+    props.chooseHeaderLink('Выйти');
+  });
+
   return (
 
     <main className="main">
